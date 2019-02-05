@@ -1,4 +1,6 @@
-# My project in school of mobile development at Yandex.
+# YandexLauncher
+
+My project in school of mobile development at Yandex.
 
 CircleCi - [![CircleCI](https://circleci.com/gh/Domash/YandexLauncher/tree/dev.svg?style=svg)](https://circleci.com/gh/Domash/YandexLauncher/tree/dev)
 
