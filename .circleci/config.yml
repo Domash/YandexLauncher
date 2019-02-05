@@ -137,6 +137,10 @@ workflows:
     jobs:
       - "Dependencies"
       - "ktlint_download"
+      - "Fabric_prop":
+          filters:
+            branches:
+              only: master
       - "ktlint":
           requires:
             - "ktlint_download"
@@ -152,10 +156,6 @@ workflows:
             - "Lint"
             - "ktlint"
             - "Unit_tests"
-      - "Fabric_prop":
-          filters:
-            branches:
-            only: master
       - "Fabric_deploy":
           requires:
             - "Build"
