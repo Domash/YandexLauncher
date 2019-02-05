@@ -50,7 +50,7 @@ android {
             fabricKey = keystoreProperties["fabricKey"]
         }
 
-        manifestPlaceholders = [fabricKey:fabricKey]
+        //manifestPlaceholders = [fabricKey:fabricKey]
         buildConfigField("String", "APPCENTER_KEY", "\"$appCenterKey\"")
 
     }
