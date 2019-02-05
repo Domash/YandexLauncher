@@ -1,136 +1,118 @@
 defaults: &defaults
   working_directory: ~/code
   docker:
-    - image: circleci/android:api-28
+  - image: circleci/android:api-28-alpha
   environment:
     JVM_OPTS: -Xmx3200m
-  parallelism: 1
+  parallelism: 2
 
 version: 2
 jobs:
   "Dependencies":
     <<: *defaults
     steps:
-      - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Init Gradle
-          command: sudo chmod +x ./gradlew
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - persist_to_workspace:
-          root: ~/code
-          paths:
-            - ./*
-  "Unit_Tests":
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/code
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run Unit Tests
-          command: ./gradlew test
-      - store_test_results:
-          path: app/build/test-results
+    - checkout
+    - restore_cache:
+        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    - run:
+        name: Chmod permissions
+        command: sudo chmod +x ./gradlew
+    - run:
+        name: Download Dependencies
+        command: ./gradlew androidDependencies
+    - save_cache:
+        paths:
+        - ~/.gradle
+        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    - persist_to_workspace:
+        root: ~/code
+        paths:
+        - ./*
   "Lint":
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/code
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run Lint
-          command: ./gradlew lint
-      - store_artifacts:
-          path: app/build/reports
-          destination: reports
-  "Fabric_Properties":
+    - attach_workspace:
+        at: ~/code
+    - restore_cache:
+        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    - run:
+        name: Run Lint
+        command: ./gradlew lint
+    - store_artifacts:
+        path: app/build/reports
+        destination: reports
+  "Unit_tests":
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/code/app
-      - run:
-          name: Import Properties
-          command: echo -e "apiSecret=${FABRIC_API_SECRET}\napiKey=${FABRIC_API_KEY}" >> ~/code/app/fabric.properties
-      - persist_to_workspace:
-          root: ~/code
-          paths:
-            - app/fabric.properties
+    - attach_workspace:
+        at: ~/code
+    - restore_cache:
+        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    - run:
+        name: Run Unit Tests
+        command: ./gradlew test
+    - store_test_results:
+        path: app/build/test-results
   "Build":
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/code
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Build
-          command: ./gradlew clean assembleRelease
-      - store_artifacts:
-          path: app/build/outputs/apk/
-          destination: apks
-      - persist_to_workspace:
-          root: ~/code
-          paths:
-            - ./*
-  "Deploy_Fabric":
+    - attach_workspace:
+        at: ~/code
+    - restore_cache:
+        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    - run:
+        name: Build
+        command: ./gradlew clean assembleRelease
+    - store_artifacts:
+        path: app/build/outputs/apk/
+        destination: release
+    - persist_to_workspace:
+        root: ~/code
+        paths:
+        - ./*
+  "Fabric_prop":
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~/code/app
+    - run:
+        name: Generate Fabric Properties
+        command: echo -e "apiSecret=${FABRIC_SECRET}\napiKey=${FABRIC_KEY}" >> ~/code/app/fabric.properties
+    - persist_to_workspace:
+        root: ~/code
+        paths:
+          - app/fabric.properties
+  "Fabric_deploy":
     <<: *defaults
     working_directory: ~/code
     steps:
-      - attach_workspace:
-          at: ~/code
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - deploy:
-          name: Deploy Fabric
-          command: ./gradlew crashlyticsUploadDistributionRelease
-  "Deploy_AppCenter":
-    <<: *defaults
-    working_directory: ~/code
-    steps:
-      - attach_workspace:
-          at: ~/code
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - deploy:
-          name: Deploy AppCenter
-          command: ./gradlew -Pdeploy=true deployAppCenter
+    - attach_workspace:
+        at: ~/code
+    - restore_cache:
+        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    - deploy:
+        name: Deploy Fabric
+        command: ./gradlew crashlyticsUploadDistributionRelease
 workflows:
   version: 2
   build:
     jobs:
       - "Dependencies"
-      - "Lint":
+      - "Unit_tests":
           requires:
             - "Dependencies"
-      - "Unit_Tests":
+      - "Lint":
           requires:
             - "Dependencies"
       - "Build":
           requires:
-            - "Dependencies"
             - "Lint"
-            - "Unit_Tests"
-      - "Fabric_Properties":
+            - "Unit_tests"
+            - "Fabric_prop"
+      - "Fabric_deploy":
+          requires:
+            - "Build"
+            - "Fabric_prop"
           filters:
             branches:
               only: master
-      - "Deploy_Fabric":
-          requires:
-            - "Build"
-            - "Fabric_Properties"
-          filters:
-            branches:
-              only: master
-      - "Deploy_AppCenter":
-          requires:
-            - "Build"
