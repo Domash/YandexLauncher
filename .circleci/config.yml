@@ -115,7 +115,7 @@ workflows:
       - "Unit_Tests":
           requires:
             - "Dependencies"
-      - "Build App":
+      - "Build":
           requires:
             - "Dependencies"
             - "Lint"
