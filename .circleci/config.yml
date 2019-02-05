@@ -109,12 +109,8 @@ jobs:
       - image: circleci/buildpack-deps:jessie-curl
     working_directory: ~/
     steps:
-      - *attach_workspace
-      - restore_cache:
-          keys:
-            - ktlint-{{ checksum "~/ktlint" }}
-            - ktlint-
-
+      - attach_workspace:
+              at: ~/code
       - run:
           name: Download ktlint
           command: |
