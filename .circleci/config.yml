@@ -152,11 +152,22 @@ workflows:
             - "Lint"
             - "ktlint"
             - "Unit_tests"
-      - "Fabric_prop"
+      - "Fabric_prop":
+          filters:
+            branches:
+            only: master
       - "Fabric_deploy":
           requires:
             - "Build"
             - "Fabric_prop"
+          filters:
+            branches:
+              only: master
       - "Deploy AppCenter":
           requires:
             - "Build"
+          filters:
+            branches:
+              only:
+                - master
+                - dev
