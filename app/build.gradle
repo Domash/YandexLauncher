@@ -9,6 +9,10 @@ apply plugin: 'kotlin-android-extensions'
 //Fabric
 apply plugin: 'io.fabric'
 
+def keystorePropertiesFile = rootProject.file("keystores/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         config {
@@ -18,9 +22,6 @@ android {
                 keyPassword System.getenv("KEY_PASSWORD")
                 keyAlias System.getenv("KEY_ALIAS")
             } else {
-                def keystorePropertiesFile = rootProject.file("keystores/keystore.properties")
-                def keystoreProperties = new Properties()
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
                 storePassword keystoreProperties['storePassword']
                 keyPassword keystoreProperties['keyPassword']
                 keyAlias keystoreProperties['keyAlias']
@@ -39,10 +40,6 @@ android {
         //Fabric & AppCentre
         def fabricKey
         def appCenterKey
-
-        def keystorePropertiesFile = rootProject.file("keystores/keystore.properties")
-        def keystoreProperties = new Properties()
-        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
         if (System.getenv("CI") != null) {
             appCenterKey = System.getenv("APPCENTER_KEY")
