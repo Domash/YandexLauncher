@@ -147,7 +147,7 @@ workflows:
     jobs:
       - "Dependencies"
       - "ktlint_download"
-       - ktlint:
+      - ktlint:
           requires:
             - "ktlint_download"
             - "dependencies"
