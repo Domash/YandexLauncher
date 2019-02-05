@@ -9,9 +9,11 @@ apply plugin: 'kotlin-android-extensions'
 //Fabric
 apply plugin: 'io.fabric'
 
-def keystorePropertiesFile = rootProject.file("keystores/keystore.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+if (System.getenv("CI") == null) {
+    def keystorePropertiesFile = rootProject.file("keystores/keystore.properties")
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 android {
     signingConfigs {
