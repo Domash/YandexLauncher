@@ -150,7 +150,7 @@ workflows:
       - ktlint:
           requires:
             - "ktlint_download"
-            - "dependencies"
+            - "Dependencies"
       - "Unit_tests":
           requires:
             - "Dependencies"
