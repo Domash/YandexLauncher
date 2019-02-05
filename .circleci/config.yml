@@ -53,7 +53,7 @@ jobs:
         command: ./gradlew clean test
     - store_test_results:
         path: app/build/test-results
-  "Build":
+  "Make_build":
     <<: *defaults
     steps:
     - attach_workspace:
@@ -151,21 +151,21 @@ workflows:
       - "Lint":
           requires:
             - "Dependencies"
-      - "Build":
+      - "Make_build":
           requires:
             - "Lint"
             - "ktlint"
             - "Unit_tests"
       - "Fabric_deploy":
           requires:
-            - "Build"
+            - "Make_build"
             - "Fabric_prop"
           filters:
             branches:
               only: master
       - "Deploy AppCenter":
           requires:
-            - "Build"
+            - "Make_build"
           filters:
             branches:
               only:
