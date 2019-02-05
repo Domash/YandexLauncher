@@ -70,7 +70,7 @@ jobs:
         root: ~/code
         paths:
         - ./*
-  "Fabric Properties":
+  "Fabric_prop":
     <<: *defaults
     steps:
     - attach_workspace:
@@ -119,11 +119,11 @@ workflows:
           requires:
             - "Lint"
             - "Unit_tests"
-            - "Fabric cleaProperties"
+            - "Fabric_prop"
       - "Deploy Fabric":
           requires:
             - "Build"
-            - "Fabric Properties"
+            - "Fabric_prop"
           filters:
             branches:
               only: master
