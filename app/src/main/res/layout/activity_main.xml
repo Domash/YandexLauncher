@@ -36,8 +36,6 @@
             app:layout_constraintBottom_toTopOf="@+id/git" />
     />
 
-
-
     <TextView
             android:id = "@+id/git"
             android:layout_marginTop="10dp"
