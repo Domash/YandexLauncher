@@ -98,6 +98,7 @@ workflows:
   build:
     jobs:
       - "Dependencies"
+      - "Fabric_prop"
       - "Unit_tests":
           requires:
             - "Dependencies"
