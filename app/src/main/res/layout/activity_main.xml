@@ -7,13 +7,49 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+    <com.domash.yandexlauncher.RoundedImageView
+            android:id="@+id/photo"
+            android:src="@drawable/ded"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_margin="40dp"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/name_surname" />
+
     <TextView
+            android:id="@+id/name_surname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textSize="30dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="center_horizontal"
+            android:text="Denis Domashevich"
+            app:layout_constraintTop_toBottomOf="@id/photo"
+            app:layout_constraintEnd_toEndOf="@+id/photo"
+            app:layout_constraintStart_toStartOf="@+id/photo"
+            app:layout_constraintBottom_toTopOf="@+id/git" />
+
+    <TextView
+            android:id = "@+id/git"
+            android:layout_marginTop="10dp"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+
+            android:textSize="30dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="github.com/Domash"
+            android:autoLink="web"
+            app:layout_constraintTop_toBottomOf="@id/name_surname"
+            app:layout_constraintEnd_toEndOf="@+id/name_surname"
+            app:layout_constraintStart_toStartOf="@+id/name_surname"
+    />
+
 
 </android.support.constraint.ConstraintLayout>
