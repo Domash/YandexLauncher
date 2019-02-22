@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.WelcomePage.Fragments.StartFragment">
+
+    <com.domash.yandexlauncher.RoundedImageView
+            android:id="@+id/photo"
+            android:src="@drawable/ded"
+            android:layout_width="@dimen/photo_size"
+            android:layout_height="@dimen/photo_size"
+            android:layout_margin="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+    />
+
+    <TextView
+            android:id="@+id/launcher_name"
+            android:text="Denis Domashevich"
+            android:textSize="27sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/photo"
+            app:layout_constraintStart_toStartOf="@+id/photo"
+            app:layout_constraintTop_toBottomOf="@+id/photo"
+            android:layout_margin="24dp"
+    />
+
+    <TextView
+            android:id="@+id/hi"
+            android:text="Domash"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/next_page_button"
+            app:layout_constraintEnd_toEndOf="@+id/launcher_name"
+            app:layout_constraintStart_toStartOf="@+id/launcher_name"
+            app:layout_constraintTop_toBottomOf="@id/launcher_name"
+            android:layout_margin="24dp"
+    />
+
+
+
+
+</android.support.constraint.ConstraintLayout>
